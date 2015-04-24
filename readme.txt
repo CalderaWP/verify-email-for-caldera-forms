@@ -30,8 +30,11 @@ Of course it does.
 
 == Changelog ==
 
-= 0.1.0 =
+= 1.0.0 =
 Initial Version
+
+= 1.0.1 =
+FIXED: Error causing incorrect email address to be used, and therefore error was thrown on submit.
 
 == Upgrade Notice ==
 Nothing to report
