@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Verify Email for Caldera Forms
- * Plugin URI:  
+ * Plugin URI:
  * Description: Send the submitter an email with a validate link to verify thier email address before sending.
  * Version:     1.0.0
  * Author:      David Cramer
- * Author URI:  
+ * Author URI:
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
@@ -30,7 +30,23 @@ function cf_validate_email_register_processor($pr){
 function cf_validate_email_submit($config, $form){
 	global $transdata;
 
-	$recipient = Caldera_Forms::do_magic_tags( $config['email'] );
+	$fail =  array(
+		'type' => 'error',
+		'note'	=>	__( 'Could not send verification email', 'cf-validate-email' )
+	);
+
+	$recipient = Caldera_Forms::get_field_data( $config['email'], $form );
+	if ( is_string( $recipient ) ) {
+		$recipient = Caldera_Forms::do_magic_tags( $recipient );
+		if ( ! is_string( $recipient ) || ! filter_var( $recipient, FILTER_VALIDATE_EMAIL ) ) {
+			return $fail;
+
+		}
+
+	}else{
+		return $fail;
+
+	}
 
 	if(isset($transdata[$config['processor_id']]['validated']) && $transdata[$config['processor_id']]['validated'] === $recipient ){
 		// already validated
@@ -65,15 +81,15 @@ function cf_validate_email_submit($config, $form){
 	$validate_link = explode('?', $transdata['data']['_wp_http_referer_true']);
 	$validate_link = $validate_link[0].'?'.http_build_query($referer['query']);
 	$validate_link = '<a href="'.$validate_link.'">'.$validate_link.'</a>';
-	
+
 	$subject = Caldera_Forms::do_magic_tags( $config['subject'] );
-	
+
 	$mail['headers'][] = 'From: ' . $config['from_name'] . ' <' . $config['from_email'] . '>';
 	$mail['headers'][] = "Content-type: text/html";
 
 	$config['message'] = str_replace('{validate_link}', $validate_link, $config['message']);
 	$message = nl2br( Caldera_Forms::do_magic_tags( $config['message'] ) );
-	
+
 	$headers = implode("\r\n", $mail['headers']);
 
 	$return = array(
@@ -84,10 +100,10 @@ function cf_validate_email_submit($config, $form){
 	// prepare email
 	if( wp_mail( '<'.$recipient.'>', $subject, $message, $headers) ){
 		return $return;
+
+	}else{
+		return $fail;
+
 	}
 
-	return array(
-		'type' => 'error',
-		'note'	=>	'could not send verification email'
-	);;
 }
