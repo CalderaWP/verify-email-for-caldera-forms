@@ -1,33 +1,59 @@
 <?php
 /**
  * Plugin Name: Verify Email for Caldera Forms
- * Plugin URI:
+ * Plugin URI:  https://calderawp.com/downloads/verify-email-for-caldera-forms/
  * Description: Send the submitter an email with a validate link to verify thier email address before sending.
  * Version:     1.0.0
- * Author:      David Cramer
- * Author URI:
+ * Author:      David Cramer for CalderaWP LLC
+ * Author URI:  https://CalderaWP.com
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
 
-// add filters
-add_filter('caldera_forms_get_form_processors', 'cf_validate_email_register_processor');
+/**
+ * Hook to add processor
+ *
+ * @since 1.0.0
+ */
+add_filter( 'caldera_forms_get_form_processors', 'cf_validate_email_register_processor' );
 
+/**
+ * Callback to add processor.
+ *
+ * @uses "caldera_forms_get_form_processors" filter
+ *
+ * @since 1.0.0
+ *
+ * @param array $pr Registered processor
+ *
+ * @return array
+ */
 function cf_validate_email_register_processor($pr){
 	$pr['validate_email'] = array(
 		"name"              =>  __('Validate Email', 'cf-validate-email'),
-		"description"       =>  __("Send submitter a link to validate email", 'cf-validate-email'),
+		"description"       =>  __('Send submitter a link to validate email', 'cf-validate-email'),
 		"icon"				=>	plugin_dir_url(__FILE__) . "icon.png",
 		"author"            =>  'David Cramer',
-		"author_url"        =>  'http://cramer.co.za',
+		"author_url"        =>  'https://CalderaWP.com',
 		"pre_processor"		=>  'cf_validate_email_submit',
 		"template"          =>  plugin_dir_path(__FILE__) . "config.php",
 	);
+
 	return $pr;
 }
 
-function cf_validate_email_submit($config, $form){
+/**
+ * Process the email validation
+ *
+ * @since 1.0.0
+ *
+ * @param array $config Processor config
+ * @param array $form The current form submission data
+ *
+ * @return array|void Success or fail data or void if already validated.
+ */
+function cf_validate_email_submit( $config, $form){
 	global $transdata;
 
 	$fail =  array(
@@ -69,10 +95,13 @@ function cf_validate_email_submit($config, $form){
 		if(isset($referer['query']['cf_er'])){
 			unset($referer['query']['cf_er']);
 		}
+
 		if(isset($referer['query']['cf_su'])){
 			unset($referer['query']['cf_su']);
 		}
+
 	}
+
 	// add transient process
 	$referer['query']['validatetoken'] = $transdata['vkey'];
 	$referer['query']['cf_tp'] = $transdata['transient'];
