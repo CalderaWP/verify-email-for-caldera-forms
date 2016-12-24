@@ -19,6 +19,13 @@
 add_filter( 'caldera_forms_get_form_processors', 'cf_validate_email_register_processor' );
 
 /**
+ * Hook to allow links to be opened in different browsers
+ *
+ * @since 1.1.0
+ */
+add_action( 'caldera_forms_verification_token_failed', 'cf_validate_email_cross_browser' );
+
+/**
  * Callback to add processor.
  *
  * @uses "caldera_forms_get_form_processors" filter
@@ -106,7 +113,6 @@ function cf_validate_email_submit( $config, $form){
 	$referer['query']['validatetoken'] = $transdata['vkey'];
 	$referer['query']['cf_tp'] = $transdata['transient'];
 
-
 	$validate_link = explode('?', $transdata['data']['_wp_http_referer_true']);
 	$validate_link = $validate_link[0].'?'.http_build_query($referer['query']);
 	$validate_link = '<a href="'.$validate_link.'">'.$validate_link.'</a>';
@@ -135,4 +141,19 @@ function cf_validate_email_submit( $config, $form){
 
 	}
 
+}
+
+
+/**
+ * Run submission when nonce fails beacuse it was clicked in another browser
+ *
+ * @since 1.2.0
+ *
+ * @uses "caldera_forms_verification_token_failed" action
+ * @param $form_id
+ */
+function cf_validate_email_cross_browser( $form_id ){
+    if( isset( $_GET[ 'vkey' ] ) );
+    Caldera_Forms::process_submission();
+    exit;
 }
