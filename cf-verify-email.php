@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Verify Email for Caldera Forms
- * Plugin URI:  https://calderawp.com/downloads/verify-email-for-caldera-forms/
+ * Plugin URI:  https://CalderaForms.com/downloads/verify-email-for-caldera-forms/
  * Description: Send the submitter an email with a validate link to verify their email address before sending.
- * Version:     1.0.1
- * Author:      David Cramer for CalderaWP LLC
- * Author URI:  https://CalderaWP.com
+ * Version:     1.2.0
+ * Author:      Caldera Labs
+ * Author URI:  https://CalderaForms.com
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
