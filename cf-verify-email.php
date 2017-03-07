@@ -3,7 +3,7 @@
  * Plugin Name: Verify Email for Caldera Forms
  * Plugin URI:  https://CalderaForms.com/downloads/verify-email-for-caldera-forms/
  * Description: Send the submitter an email with a validate link to verify their email address before sending.
- * Version:     1.2.0
+ * Version:     1.1.0
  * Author:      Caldera Labs
  * Author URI:  https://CalderaForms.com
  * License:     GPL-2.0+
@@ -39,10 +39,10 @@ add_action( 'caldera_forms_verification_token_failed', 'cf_validate_email_cross_
 function cf_validate_email_register_processor($pr){
 	$pr['validate_email'] = array(
 		"name"              =>  __('Validate Email', 'cf-validate-email'),
-		"description"       =>  __('Send submitter a link to validate email', 'cf-validate-email'),
+		"description"       =>  __('Require email validation before completing form submission.', 'cf-validate-email'),
 		"icon"				=>	plugin_dir_url(__FILE__) . "icon.png",
-		"author"            =>  'David Cramer',
-		"author_url"        =>  'https://CalderaWP.com',
+		"author"            =>  'Caldera Labs',
+		"author_url"        =>  'http://CalderaLabs.org',
 		"pre_processor"		=>  'cf_validate_email_submit',
 		"template"          =>  plugin_dir_path(__FILE__) . "config.php",
 	);
@@ -147,13 +147,15 @@ function cf_validate_email_submit( $config, $form){
 /**
  * Run submission when nonce fails beacuse it was clicked in another browser
  *
- * @since 1.2.0
+ * @since 1.1.0
  *
  * @uses "caldera_forms_verification_token_failed" action
  * @param $form_id
  */
 function cf_validate_email_cross_browser( $form_id ){
-    if( isset( $_GET[ 'vkey' ] ) );
-    Caldera_Forms::process_submission();
+    if( isset( $_GET[ 'validatetoken' ] ) ){
+	    Caldera_Forms::process_submission();
+    }
+
     exit;
 }
