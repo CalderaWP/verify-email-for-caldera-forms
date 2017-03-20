@@ -88,7 +88,19 @@ function cf_validate_email_submit( $config, $form){
 
 	if(!empty($_GET['validatetoken'])){
 		if($transdata['vkey'] === $_GET['validatetoken']){
-			$transdata[$config['processor_id']]['validated'] = Caldera_Forms::do_magic_tags( $config['email'] );
+			$email = Caldera_Forms::do_magic_tags( $config['email'] );
+			$transdata[$config['processor_id']]['validated'] = $email;
+			
+			/**
+			* Fired when verification token fails.
+			*
+			* @since 1.1.1
+			*
+			* @param string $email Email that would have been correct
+			* @param array $config Processor configuration
+			* @param array $form Form configuration
+			*/
+			do_action( 'cf_verify_email_token_failed', $email, $config, $form );
 			return;
 		}
 	}
