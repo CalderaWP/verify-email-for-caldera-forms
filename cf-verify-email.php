@@ -131,7 +131,9 @@ function cf_validate_email_submit( $config, $form){
 
 	$subject = Caldera_Forms::do_magic_tags( $config['subject'] );
 
-	$mail['headers'][] = 'From: ' . $config['from_name'] . ' <' . $config['from_email'] . '>';
+	$from_name = $config['from_name'];
+	$from_email = sanitize_email( $config['from_email'] );
+	$mail['headers'][] = 'From: ' . $from_name . ' <' . $from_email . '>';
 	$mail['headers'][] = "Content-type: text/html";
 
 	$config['message'] = str_replace('{validate_link}', $validate_link, $config['message']);
@@ -139,20 +141,35 @@ function cf_validate_email_submit( $config, $form){
 
 	$headers = implode("\r\n", $mail['headers']);
 
-	$return = array(
+	$success = array(
 		'type' => 'success',
 		'note'	=>	Caldera_Forms::do_magic_tags( $config['notice'] )
 	);
 
 	// prepare email
-	if( wp_mail( '<'.$recipient.'>', $subject, $message, $headers) ){
-		return $return;
+    $passed = false;
+    if ( ! caldera_forms_pro_is_active() ) {
+        if (wp_mail('<' . $recipient . '>', $subject, $message, $headers)) {
+            $passed = true;
 
-	}else{
-		return $fail;
+        } else {
+            $passed = false;
 
-	}
+        }
+    }else{
+        include_once __DIR__ .'/CF_Verify_Email_Validate_With_Pro.php';
+        $client = new CF_Verify_Email_Validate_With_Pro( \calderawp\calderaforms\pro\container::get_instance()
+            ->get_settings()
+            ->get_api_keys()
+        );
+        $passed = $client->sendVerification($recipient,$subject,$message,$from_name, $from_email );
+    }
 
+    if( ! $passed ){
+	    return $fail;
+    }else{
+	    return $success;
+    }
 }
 
 
@@ -171,3 +188,5 @@ function cf_validate_email_cross_browser( $form_id ){
 
     exit;
 }
+
+
