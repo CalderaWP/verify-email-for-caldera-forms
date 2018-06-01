@@ -40,7 +40,15 @@ FIXED: Error causing incorrect email address to be used, and therefore error was
 * See :[https://calderaforms.com/updates/verify-email-1-1-0/](https://calderaforms.com/updates/verify-email-1-1-0?utm_source=dotOrg&utm_medium=plugins&utm_campaign=cf-verify-email)
 * FIXED: Links opened in a different browser could not be validated. Now they can. This bug fix requires Caldera Forms 1.5 or later.
 
+= 1.2.0 =
+* See :[https://calderaforms.com/updates/verify-email-1-2-0/](https://calderaforms.com/updates/verify-email-1-2-0?utm_source=dotOrg&utm_medium=plugins&utm_campaign=cf-verify-email)
+* ADDED: Ability to send verify email through CF Pro, if possible.
+
+
 == Upgrade Notice ==
 
 = 1.1.0 =
 See: [https://calderaforms.com/updates/verify-email-1-1-0/](https://calderaforms.com/updates/verify-email-1-1-0?utm_source=dotOrg&utm_medium=plugins&utm_campaign=cf-verify-email)
+
+= 1.2.0 =
+See: [https://calderaforms.com/updates/verify-email-1-2-0/](https://calderaforms.com/updates/verify-email-1-1-0?utm_source=dotOrg&utm_medium=plugins&utm_campaign=cf-verify-email)
