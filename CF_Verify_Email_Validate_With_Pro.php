@@ -2,14 +2,19 @@
 
 class CF_Verify_Email_Validate_With_Pro extends \calderawp\calderaforms\pro\api\api {
 
-    /**
-     * @inheritdoc
-     */
-    protected function get_url_root()
-    {
-        return caldera_forms_pro_app_url();
-    }
 
+    /**
+     * Send the verification message via CF Pro
+     *
+     * @since 1.2.0
+     *
+     * @param string $recipient
+     * @param string $subject
+     * @param string $message
+     * @param string $fromName
+     * @param string $fromEmail
+     * @return bool
+     */
     public function sendVerification(
         $recipient,
         $subject,
@@ -38,4 +43,11 @@ class CF_Verify_Email_Validate_With_Pro extends \calderawp\calderaforms\pro\api\
                 \Monolog\Logger::ALERT
             );
     }
+
+    /** @inheritdoc */
+    protected function get_url_root()
+    {
+        return caldera_forms_pro_app_url();
+    }
+
 }
